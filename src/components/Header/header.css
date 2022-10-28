@@ -1,0 +1,12 @@
+.header{
+    background-color: #ffcf54 !important;
+    padding:6px;
+}
+.header-wrapper{
+    justify-content: space-between;
+}
+.menu{
+    width:45%;
+    justify-content: space-around;
+    align-items: center;
+}
