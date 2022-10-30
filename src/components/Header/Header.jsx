@@ -7,12 +7,14 @@ import Box from '@mui/material/Box'
 import './header.css'
 import { menuItem } from './Menu'
 import HeaderLink from '../Link/HeaderLink'
-import Button from '@mui/material/Button'
 function Header() {
   return (
     <AppBar position="static" className="header">
       <Container maxWidth="xl" className="header-container">
         <Toolbar disableGutters className="header-wrapper">
+        <Box sx={{ display: { xs: 'none', md: 'flex' } , width:{xs:'0'} }} className="menu">            
+          </Box>
+          <Box sx={{marginLeft:{md:'135px'}}}>
           <Typography
             variant="h6"
             noWrap
@@ -26,9 +28,10 @@ function Header() {
               fontSize: '25px',
             }}
           >
-            FindYourMaid
+            ChatBox
           </Typography>
-          <Box sx={{ display: { xs: 'flex', md: 'flex' } }} className="menu">
+          </Box>         
+          <Box sx={{ display: { xs: 'flex', md: 'flex' } , width:{xs:'10%'}}} className="menu">
             {menuItem.map((item, index) => {
               return (
                 <HeaderLink href={item.path} key={index} underline="hover">
@@ -36,8 +39,6 @@ function Header() {
                 </HeaderLink>
               )
             })}
-            <Button variant="contained">Need Work</Button>
-            <Button variant="contained">Login</Button>
           </Box>
         </Toolbar>
       </Container>

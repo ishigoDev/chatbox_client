@@ -7,6 +7,6 @@
 }
 .menu{
     width:45%;
-    justify-content: space-around;
+    justify-content: flex-end;
     align-items: center;
 }

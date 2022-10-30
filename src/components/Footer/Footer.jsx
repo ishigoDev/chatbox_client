@@ -1,8 +1,17 @@
-import React from 'react'
+import React from 'react';
+import { Container, Typography } from '@mui/material';
+import { Box} from '@mui/system';
 
 function Footer() {
   return (
-    <div>Footer</div>
+    <Box>
+      <Container component="main" sx={{display:'flex',justifyContent:'center',alignItem:'center'}}>
+      <Typography variant="p" component="p" gutterBottom>
+          Made with ❤️ by Pranay
+        </Typography>
+      </Container>
+    </Box>
+    
   )
 }
 
