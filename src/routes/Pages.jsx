@@ -1,4 +1,5 @@
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
+import Home from '../pages/Home/Home';
 
-export const Home = ()=><><Header/><div>Hello world!</div><Footer/></>
+export const HomePage = ()=><><Header/><Home/><Footer/></>
