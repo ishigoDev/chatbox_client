@@ -9,7 +9,7 @@ import { menuItem } from './Menu'
 import HeaderLink from '../Link/HeaderLink'
 function Header() {
   return (
-    <AppBar position="static" className="header">
+    <AppBar position="sticky" className="header" sx={{boxShadow:'0'}}>
       <Container maxWidth="xl" className="header-container">
         <Toolbar disableGutters className="header-wrapper">
         <Box sx={{ display: { xs: 'none', md: 'flex' } , width:{xs:'0'} }} className="menu">            
