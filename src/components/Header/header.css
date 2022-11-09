@@ -13,3 +13,7 @@
     justify-content: flex-end;
     align-items: center;
 }
+.header-logo{
+    display: flex;
+    align-content: center;
+}
