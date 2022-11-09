@@ -1,5 +1,9 @@
 export const menuItem = [{
     'name':'Login',
-    'path':'/'
+    'path':'/login'
 },
+{
+    'name':'Join',
+    'path':'/'
+}
 ]
