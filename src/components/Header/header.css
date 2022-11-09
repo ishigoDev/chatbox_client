@@ -1,7 +1,10 @@
 .header{
     background-color: #ffcf54 !important;
     padding:6px;
-}
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;    
+}   
 .header-wrapper{
     justify-content: space-between;
 }
@@ -9,4 +12,8 @@
     width:45%;
     justify-content: flex-end;
     align-items: center;
+}
+.header-logo{
+    display: flex;
+    align-content: center;
 }

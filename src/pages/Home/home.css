@@ -1,0 +1,9 @@
+.home-page{
+    height:85vh;
+}
+.home-page-container{
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    height:100%;
+}
