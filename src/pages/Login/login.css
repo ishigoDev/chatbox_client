@@ -1,0 +1,9 @@
+.login-page {
+  height: 85vh;
+}
+.login-page-container {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
