@@ -7,3 +7,11 @@
     align-items: center;
     height:100%;
 }
+.message-error{
+    color: red;
+    text-align: center;
+}
+.message{
+    text-align: center;
+    color: green;    
+}

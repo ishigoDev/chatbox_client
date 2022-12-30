@@ -1,5 +1,5 @@
 import {createBrowserRouter} from "react-router-dom";
-import {HomePage,LoginPage} from './Pages';
+import {HomePage,LoginPage,ChatPage} from './Pages';
 
 
 export const routers = createBrowserRouter([
@@ -10,5 +10,9 @@ export const routers = createBrowserRouter([
     {
       path:'/login',
       element:<LoginPage/>
+    },
+    {
+      path:'/chatroom',
+      element:<ChatPage />
     }
   ]); 

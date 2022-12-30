@@ -4,7 +4,9 @@ import { Grid } from '@mui/material'
 import CBTextField from '../../components/CBTextField/CBTextField'
 import FormArea from '../../components/FormArea/FormArea'
 import CBButton from '../../components/CBButton/CBButton'
-import './login.css'
+import './login.css';
+import {login} from '../../axios/login';
+
 function Login() {
   const Fields = [
     {
@@ -14,6 +16,9 @@ function Login() {
       password: 'Password',
     },
   ]
+  const loginHandle = async ()=>{
+    const hello  = await login();
+  } 
   return (
     <div style={{ background: '#ffcf5457' }} className="login-page">
       <Container component="main" className="login-page-container" fixed>
@@ -31,7 +36,7 @@ function Login() {
             )
           })}
           <Grid item xs={12} sm={12} lg={12} md={12}>
-            <CBButton variant="contained" fullWidth size="large">
+            <CBButton variant="contained" fullWidth size="large" onClick={loginHandle}>
               Login
             </CBButton>
           </Grid>
