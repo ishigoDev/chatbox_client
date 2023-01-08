@@ -6,7 +6,6 @@ import FormArea from '../../components/FormArea/FormArea'
 import CBTextField from '../../components/CBTextField/CBTextField'
 import CBButton from '../../components/CBButton/CBButton'
 import signUp from '../../axios/signup'
-import {redirect } from 'react-router-dom'
 
 function Home() {
   const [loading,setLoading] = useState(false);
@@ -66,7 +65,6 @@ function Home() {
         if(response.data.status == 200){
           setMessage(response.data.message);
           setTimeout(()=>{
-            console.log('hello')
             window.location.href='/login';
           },1000)
         }
