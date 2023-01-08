@@ -1,6 +1,6 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { Container } from '@mui/system'
-import { Grid } from '@mui/material'
+import { Grid , Typography } from '@mui/material'
 import CBTextField from '../../components/CBTextField/CBTextField'
 import FormArea from '../../components/FormArea/FormArea'
 import CBButton from '../../components/CBButton/CBButton'
@@ -8,21 +8,64 @@ import './login.css';
 import {login} from '../../axios/login';
 
 function Login() {
+  const [loading,setLoading] = useState(false);  
+  const [error,setError]=useState(false);
+  const [errorField,setErrorField]=useState('');
+  const [helperText,setHelperText]= useState('');
+  const [email,setEmail] = useState('');
+  const [password,setPassword] = useState('');
+  const [message,setMessage] = useState('')
+  const [messageError,setMessageError] = useState(false)
+  const handleEmail= (e)=>{
+    setEmail(e.target.value);    
+  }  
+  const handlePassword = (e)=>{
+    setPassword(e.target.value);    
+  }  
   const Fields = [
     {
       email: 'Email',
+      handle:handleEmail,
     },
     {
       password: 'Password',
+      handle:handlePassword
     },
-  ]
+  ];
+ 
   const loginHandle = async ()=>{
-    const hello  = await login();
+    setMessageError(false);
+    setMessage('');
+    if(email.length == 0){
+      setError(true);
+      setErrorField('Email');
+      setHelperText('Email is Required')
+    }else if(password.length == 0){
+      setError(true);
+      setErrorField('Password');
+      setHelperText('Password is Required')
+    }else{
+      setError(false)
+      setErrorField('');
+      setHelperText('')
+      setLoading(true);
+      try{
+        const response  = await login({'email':email,'password':password});
+        if(response.data.status == 200){
+          console.log(response.data)
+        }
+      }catch(error){
+        setMessageError(true);
+        setMessage(error.response.data.message);
+      }
+      setLoading(false);
+    }
   } 
   return (
     <div style={{ background: '#ffcf5457' }} className="login-page">
       <Container component="main" className="login-page-container" fixed>
         <FormArea subheading="Let's Move inside">
+        {message !== '' ? <div style={{textAlign:'center',width:'100%',margin:'10px 0'}}><Typography className={messageError ? 'message-error':'message'} variant="caption"  gutterBottom >{message}</Typography></div>: null }
           {Fields.map((x, index) => {
             return (
               <Grid item xs={12} sm={12} lg={12} md={12} key={index}>
@@ -31,6 +74,11 @@ function Login() {
                   type={Object.keys(x)}
                   label={Object.values(x)}
                   fullWidth
+                  required
+                  error={error && Object.values(x)[0] == errorField ? true : false }
+                  helperText={error && Object.values(x)[0] == errorField && helperText !== ''?helperText:null}
+                  onChange={(e)=>{x.handle(e)}}                        
+                  {...x}                    
                 />
               </Grid>
             )
