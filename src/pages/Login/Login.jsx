@@ -55,7 +55,7 @@ function Login() {
         if(response.data.status == 200){
           saveStorage('token',response.data.token);
           saveStorage('userId',response.data.userId);
-                    
+          window.location.href="/chatroom"          
         }
       }catch(error){
         setMessageError(true);
