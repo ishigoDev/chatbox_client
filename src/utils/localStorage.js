@@ -5,3 +5,9 @@ export const saveStorage = (key,value) =>{
         return err;
     }
 }
+export const getToken = ()=>{
+    if(localStorage.getItem('token') !== null) {
+        return localStorage['token'];
+     }
+     return false ;         
+}

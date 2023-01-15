@@ -1,5 +1,6 @@
 import {createBrowserRouter} from "react-router-dom";
 import {HomePage,LoginPage,ChatPage} from './Pages';
+import PrivateRoute from "./PrivateRoute";
 
 
 export const routers = createBrowserRouter([
@@ -13,6 +14,6 @@ export const routers = createBrowserRouter([
     },
     {
       path:'/chatroom',
-      element:<ChatPage />
+      element:<PrivateRoute><ChatPage/></PrivateRoute>
     }
   ]); 
