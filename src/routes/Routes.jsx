@@ -1,18 +1,22 @@
-import {createBrowserRouter} from "react-router-dom";
-import {HomePage,LoginPage,ChatPage} from './Pages';
-
+import { createBrowserRouter } from 'react-router-dom'
+import { HomePage, LoginPage, ChatPage } from './Pages'
+import PrivateRoute from './PrivateRoute'
 
 export const routers = createBrowserRouter([
-    {
-      path: "/",
-      element: <HomePage/>,
-    },
-    {
-      path:'/login',
-      element:<LoginPage/>
-    },
-    {
-      path:'/chatroom',
-      element:<ChatPage />
-    }
-  ]); 
+  {
+    path: '/',
+    element: <HomePage />,
+  },
+  {
+    path: '/login',
+    element: <LoginPage />,
+  },
+  {
+    path: '/chatroom',
+    element: (
+      <PrivateRoute>
+        <ChatPage />
+      </PrivateRoute>
+    ),
+  },
+])

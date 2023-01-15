@@ -6,9 +6,12 @@ import FormArea from '../../components/FormArea/FormArea'
 import CBButton from '../../components/CBButton/CBButton'
 import './login.css';
 import {login} from '../../axios/login';
-import { saveStorage } from '../../utils/localStorage'
+import { getToken, saveStorage } from '../../utils/localStorage'
 
 function Login() {
+  if(getToken()){
+    window.location.href='/chatroom'
+  }
   const [loading,setLoading] = useState(false);  
   const [error,setError]=useState(false);
   const [errorField,setErrorField]=useState('');
@@ -55,6 +58,7 @@ function Login() {
         if(response.data.status == 200){
           saveStorage('token',response.data.token);
           saveStorage('userId',response.data.userId);
+          window.location.href="/chatroom"          
         }
       }catch(error){
         setMessageError(true);
