@@ -8,7 +8,6 @@ import './header.css'
 import { menuItem } from './Menu'
 import HeaderLink from '../Link/HeaderLink'
 import { useLocation } from 'react-router-dom'
-import { ConstructionOutlined } from '@mui/icons-material'
 
 function Header() {
   const { pathname } = useLocation()
@@ -43,19 +42,25 @@ function Header() {
             sx={{ display: { xs: 'flex', md: 'flex' }, width: { xs: '10%' } }}
             className="menu"
           >
-            {menuItem
-              .filter((x) => {
-                if(x.path !== pathname) {
-                  return x
-                }
-              })
-              .map((item, index) => {
-                return (
-                  <HeaderLink href={item.path} key={index} underline="hover">
-                    {item.name}
-                  </HeaderLink>
-                )
-              })}
+            {menuItem.find((x) => {
+              return x.path == pathname
+            }) ? (
+              menuItem
+                .filter((x) => {
+                  if (x.path !== pathname) {
+                    return x
+                  }
+                })
+                .map((item, index) => {
+                  return (
+                    <HeaderLink href={item.path} key={index} underline="hover">
+                      {item.name}
+                    </HeaderLink>
+                  )
+                })
+            ) : (
+              <HeaderLink underline="hover">Sign Out</HeaderLink>
+            )}
           </Box>
         </Toolbar>
       </Container>
