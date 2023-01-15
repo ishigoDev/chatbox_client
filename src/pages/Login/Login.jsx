@@ -6,6 +6,7 @@ import FormArea from '../../components/FormArea/FormArea'
 import CBButton from '../../components/CBButton/CBButton'
 import './login.css';
 import {login} from '../../axios/login';
+import { saveStorage } from '../../utils/localStorage'
 
 function Login() {
   const [loading,setLoading] = useState(false);  
@@ -52,7 +53,8 @@ function Login() {
       try{
         const response  = await login({'email':email,'password':password});
         if(response.data.status == 200){
-          console.log(response.data)
+          saveStorage('token',response.data.token);
+          saveStorage('userId',response.data.userId);
         }
       }catch(error){
         setMessageError(true);
