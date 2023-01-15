@@ -8,6 +8,7 @@ import './header.css'
 import { menuItem } from './Menu'
 import HeaderLink from '../Link/HeaderLink'
 import { useLocation } from 'react-router-dom'
+import { ConstructionOutlined } from '@mui/icons-material'
 
 function Header() {
   const { pathname } = useLocation()
@@ -44,7 +45,7 @@ function Header() {
           >
             {menuItem
               .filter((x) => {
-                if (x.path !== pathname) {
+                if(x.path !== pathname) {
                   return x
                 }
               })
