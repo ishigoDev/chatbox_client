@@ -9,5 +9,12 @@ export const getToken = ()=>{
     if(localStorage.getItem('token') !== null) {
         return localStorage['token'];
      }
+     removeToken();
      return false ;         
+}
+export const removeToken = ()=>{
+    if(localStorage.getItem('token') !== null) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+     }
 }
