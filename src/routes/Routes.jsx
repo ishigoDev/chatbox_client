@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom'
 import { HomePage, LoginPage, ChatPage } from './Pages'
-import PrivateRoute from './PrivateRoute'
+import PrivateRoute from './PrivateRoute.jsx'
 
 export const routers = createBrowserRouter([
   {
