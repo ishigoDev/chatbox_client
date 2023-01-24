@@ -1,6 +1,6 @@
 .chatroom{
     height:87.6vH;
-    background-color: #ffcf5457;
+    background-color: #ffcf5457; 
 }
 .user-chat-list{
     padding: 20px 30px !important;
@@ -30,4 +30,24 @@
 }
 .user-chat-active-head{
 padding: 12px 8px;
+}
+.welcome-page-chatroom{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.chat-message{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.chatroom-message-containter{
+    border-left: 1px dotted orange;
+    border-right: 1px dotted orange;
+}
+.chatroom-msg-icon{
+    font-size: 150px !important;
+    color: #ffb700;
 }
