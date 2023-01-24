@@ -1,15 +1,18 @@
-import React , { useEffect , useState } from 'react'
+import React,{useState} from 'react'
 import { Container } from '@mui/system'
-import { Grid, Typography } from '@mui/material'
-import './home.css'
-import FormArea from '../../components/FormArea/FormArea'
+import { Grid , Typography } from '@mui/material'
 import CBTextField from '../../components/CBTextField/CBTextField'
+import FormArea from '../../components/FormArea/FormArea'
 import CBButton from '../../components/CBButton/CBButton'
-import signUp from '../../axios/signup'
+import './login.css';
+import {login} from '../../axios/login';
+import { getToken, saveStorage } from '../../utils/localStorage'
 
-function Home() {
-  const [loading,setLoading] = useState(false);
-  const [fullName,setFullName]= useState('');
+function Login() {
+  if(getToken()){
+    window.location.href='/chatroom'
+  }
+  const [loading,setLoading] = useState(false);  
   const [error,setError]=useState(false);
   const [errorField,setErrorField]=useState('');
   const [helperText,setHelperText]= useState('');
@@ -17,9 +20,6 @@ function Home() {
   const [password,setPassword] = useState('');
   const [message,setMessage] = useState('')
   const [messageError,setMessageError] = useState(false)
-  const handleFullName= (e)=>{
-    setFullName(e.target.value);    
-  }  
   const handleEmail= (e)=>{
     setEmail(e.target.value);    
   }  
@@ -27,27 +27,20 @@ function Home() {
     setPassword(e.target.value);    
   }  
   const Fields = [
-    {      
-      text: 'Full Name',
-      handle:handleFullName,
-    },
     {
       email: 'Email',
-      handle:handleEmail
+      handle:handleEmail,
     },
     {
       password: 'Password',
       handle:handlePassword
     },
   ];
-  const join = async () =>{
+ 
+  const loginHandle = async ()=>{
     setMessageError(false);
     setMessage('');
-    if(fullName.length == 0){
-      setError(true);
-      setErrorField('Full Name');
-      setHelperText('Full Name is Required')
-    }else if(email.length == 0){
+    if(email.length == 0){
       setError(true);
       setErrorField('Email');
       setHelperText('Email is Required')
@@ -61,12 +54,11 @@ function Home() {
       setHelperText('')
       setLoading(true);
       try{
-        const response  = await signUp({'email':email,'displayName':fullName,'password':password});
+        const response  = await login({'email':email,'password':password});
         if(response.data.status == 200){
-          setMessage(response.data.message);
-          setTimeout(()=>{
-            window.location.href='/login';
-          },1000)
+          saveStorage('token',response.data.token);
+          saveStorage('userId',response.data.userId);
+          window.location.href="/chatroom"          
         }
       }catch(error){
         setMessageError(true);
@@ -74,12 +66,12 @@ function Home() {
       }
       setLoading(false);
     }
-  }
+  } 
   return (
-    <div style={{ background: '#ffcf5457' }} className="home-page">
-      <Container component="main" className="home-page-container" fixed>        
-        <FormArea subheading="Welcome You">
-          {message !== '' ? <div style={{textAlign:'center',width:'100%',margin:'10px 0'}}><Typography className={messageError ? 'message-error':'message'} variant="caption"  gutterBottom >{message}</Typography></div>: null }
+    <div style={{ background: '#ffcf5457' }} className="login-page">
+      <Container component="main" className="login-page-container" fixed>
+        <FormArea subheading="Let's Move inside">
+        {message !== '' ? <div style={{textAlign:'center',width:'100%',margin:'10px 0'}}><Typography className={messageError ? 'message-error':'message'} variant="caption"  gutterBottom >{message}</Typography></div>: null }
           {Fields.map((x, index) => {
             return (
               <Grid item xs={12} sm={12} lg={12} md={12} key={index}>
@@ -92,14 +84,14 @@ function Home() {
                   error={error && Object.values(x)[0] == errorField ? true : false }
                   helperText={error && Object.values(x)[0] == errorField && helperText !== ''?helperText:null}
                   onChange={(e)=>{x.handle(e)}}                        
-                  {...x}                                           
+                  {...x}                    
                 />
               </Grid>
             )
           })}
           <Grid item xs={12} sm={12} lg={12} md={12}>
-            <CBButton variant="contained" fullWidth size="large" onClick={join}>
-              {loading ? 'Loading' :'Join'}
+            <CBButton variant="contained" fullWidth size="large" onClick={loginHandle}>
+              Login
             </CBButton>
           </Grid>
         </FormArea>
@@ -108,5 +100,4 @@ function Home() {
   )
 }
 
-export default Home
-
+export default Login

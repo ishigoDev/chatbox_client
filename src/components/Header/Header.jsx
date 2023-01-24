@@ -7,38 +7,60 @@ import Box from '@mui/material/Box'
 import './header.css'
 import { menuItem } from './Menu'
 import HeaderLink from '../Link/HeaderLink'
+import { useLocation } from 'react-router-dom'
+
 function Header() {
+  const { pathname } = useLocation()
   return (
-    <AppBar position="static" className="header">
+    <AppBar position="sticky" className="header" sx={{ boxShadow: '0' }}>
       <Container maxWidth="xl" className="header-container">
         <Toolbar disableGutters className="header-wrapper">
-        <Box sx={{ display: { xs: 'none', md: 'flex' } , width:{xs:'0'} }} className="menu">            
+          <Box
+            sx={{ display: { xs: 'none', md: 'flex' }, width: { xs: '0' } }}
+            className="menu"
+          ></Box>
+          <Box sx={{ marginLeft: { md: '135px' } }} className="header-logo">
+            <div>
+              <Typography
+                variant="h6"
+                noWrap
+                component="a"
+                href="/"
+                sx={{
+                  textDecoration: 'none',
+                  fontFamily: 'Kanit !important',
+                  fontWeight: 700,
+                  color: '#000000',
+                  fontSize: '40px',
+                }}
+              >
+                ChatBox
+              </Typography>
+            </div>
           </Box>
-          <Box sx={{marginLeft:{md:'135px'}}}>
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              textDecoration: 'none',
-              fontFamily: 'Inter Tight',
-              fontWeight: 700,
-              color: '#000000',
-              fontSize: '25px',
-            }}
+          <Box
+            sx={{ display: { xs: 'flex', md: 'flex' }, width: { xs: '10%' } }}
+            className="menu"
           >
-            ChatBox
-          </Typography>
-          </Box>         
-          <Box sx={{ display: { xs: 'flex', md: 'flex' } , width:{xs:'10%'}}} className="menu">
-            {menuItem.map((item, index) => {
-              return (
-                <HeaderLink href={item.path} key={index} underline="hover">
-                  {item.name}
-                </HeaderLink>
-              )
-            })}
+            {menuItem.find((x) => {
+              return x.path == pathname
+            }) ? (
+              menuItem
+                .filter((x) => {
+                  if (x.path !== pathname) {
+                    return x
+                  }
+                })
+                .map((item, index) => {
+                  return (
+                    <HeaderLink href={item.path} key={index} underline="hover">
+                      {item.name}
+                    </HeaderLink>
+                  )
+                })
+            ) : (
+              <HeaderLink underline="hover">Sign Out</HeaderLink>
+            )}
           </Box>
         </Toolbar>
       </Container>
