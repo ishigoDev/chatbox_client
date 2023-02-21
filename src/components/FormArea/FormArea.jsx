@@ -1,6 +1,6 @@
-import React from 'react'
-import Box from '@mui/material/Box'
-import { Grid, Typography } from '@mui/material'
+import React from 'react';
+import Box from '@mui/material/Box';
+import { Grid, Typography } from '@mui/material';
 import './formarea.css';
 
 function FormArea(props) {
@@ -38,7 +38,7 @@ function FormArea(props) {
         {props.children}
       </Grid>
     </Box>
-  )
+  );
 }
 
-export default FormArea
+export default FormArea;
