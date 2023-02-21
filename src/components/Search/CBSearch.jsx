@@ -10,7 +10,6 @@ const theme = createTheme({
     },
 })
 function CBSearch({className,icon,...props}) {
-    console.log(icon);
   return (
     <ThemeProvider theme={theme}>
         <TextField
@@ -23,6 +22,7 @@ function CBSearch({className,icon,...props}) {
                 ),
               }}
               variant="standard"
+              {...props}
             />
     </ThemeProvider>
   )
