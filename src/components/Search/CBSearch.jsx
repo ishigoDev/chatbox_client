@@ -1,12 +1,12 @@
-import React from 'react';
-import { TextField } from '@mui/material';
-import InputAdornment from '@mui/material/InputAdornment';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import React from "react";
+import { TextField } from "@mui/material";
+import InputAdornment from "@mui/material/InputAdornment";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: 'rgb(255 220 128)',
+      main: "rgb(255 220 128)",
     },
   },
 });

@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
-import { Container } from '@mui/system';
-import { Grid, Typography } from '@mui/material';
-import CBTextField from '../../components/CBTextField/CBTextField';
-import FormArea from '../../components/FormArea/FormArea';
-import CBButton from '../../components/CBButton/CBButton';
-import './login.css';
-import login from '../../axios/login';
-import { getToken, saveStorage } from '../../utils/localStorage';
+import React, { useState } from "react";
+import { Container } from "@mui/system";
+import { Grid, Typography } from "@mui/material";
+import CBTextField from "../../components/CBTextField/CBTextField";
+import FormArea from "../../components/FormArea/FormArea";
+import CBButton from "../../components/CBButton/CBButton";
+import "./login.css";
+import login from "../../axios/login";
+import { getToken, saveStorage } from "../../utils/localStorage";
 
 function Login() {
   if (getToken()) {
-    window.location.href = '/chatroom';
+    window.location.href = "/chatroom";
   }
   const [error, setError] = useState(false);
-  const [errorField, setErrorField] = useState('');
-  const [helperText, setHelperText] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const [errorField, setErrorField] = useState("");
+  const [helperText, setHelperText] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
   const [messageError, setMessageError] = useState(false);
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -27,36 +27,36 @@ function Login() {
   };
   const Fields = [
     {
-      email: 'Email',
+      email: "Email",
       handle: handleEmail,
     },
     {
-      password: 'Password',
+      password: "Password",
       handle: handlePassword,
     },
   ];
 
   const loginHandle = async () => {
     setMessageError(false);
-    setMessage('');
+    setMessage("");
     if (email.length === 0) {
       setError(true);
-      setErrorField('Email');
-      setHelperText('Email is Required');
+      setErrorField("Email");
+      setHelperText("Email is Required");
     } else if (password.length === 0) {
       setError(true);
-      setErrorField('Password');
-      setHelperText('Password is Required');
+      setErrorField("Password");
+      setHelperText("Password is Required");
     } else {
       setError(false);
-      setErrorField('');
-      setHelperText('');
+      setErrorField("");
+      setHelperText("");
       try {
         const response = await login({ email, password });
         if (response.data.status === 200) {
-          saveStorage('token', response.data.token);
-          saveStorage('userId', response.data.userId);
-          window.location.href = '/chatroom';
+          saveStorage("token", response.data.token);
+          saveStorage("userId", response.data.userId);
+          window.location.href = "/chatroom";
         }
       } catch (error) {
         setMessageError(true);
@@ -65,10 +65,10 @@ function Login() {
     }
   };
   return (
-    <div style={{ background: '#ffcf5457' }} className="login-page">
+    <div style={{ background: "#ffcf5457" }} className="login-page">
       <Container component="main" className="login-page-container" fixed>
         <FormArea subheading="Let's Move inside">
-          {message !== '' ? <div style={{ textAlign: 'center', width: '100%', margin: '10px 0' }}><Typography className={messageError ? 'message-error' : 'message'} variant="caption" gutterBottom>{message}</Typography></div> : null }
+          {message !== "" ? <div style={{ textAlign: "center", width: "100%", margin: "10px 0" }}><Typography className={messageError ? "message-error" : "message"} variant="caption" gutterBottom>{message}</Typography></div> : null }
           {Fields.map((x, index) => (
             <Grid item xs={12} sm={12} lg={12} md={12} key={index}>
               <CBTextField
@@ -78,7 +78,7 @@ function Login() {
                 fullWidth
                 required
                 error={!!(error && Object.values(x)[0] === errorField)}
-                helperText={error && Object.values(x)[0] === errorField && helperText !== '' ? helperText : null}
+                helperText={error && Object.values(x)[0] === errorField && helperText !== "" ? helperText : null}
                 onChange={(e) => { x.handle(e); }}
                 {...x}
               />

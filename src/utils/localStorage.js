@@ -6,13 +6,13 @@ export const saveStorage = (key, value) => {
   }
 };
 export const removeToken = () => {
-  if (localStorage.getItem('token') !== null) {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
+  if (localStorage.getItem("token") !== null) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
   }
 };
 export const getToken = () => {
-  if (localStorage.getItem('token') !== null) {
+  if (localStorage.getItem("token") !== null) {
     return localStorage.token;
   }
   removeToken();

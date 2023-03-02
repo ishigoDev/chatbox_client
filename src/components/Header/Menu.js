@@ -1,9 +1,9 @@
 export const menuItem = [{
-  name: 'Login',
-  path: '/login',
+  name: "Login",
+  path: "/login",
 },
 {
-  name: 'Join',
-  path: '/',
+  name: "Join",
+  path: "/",
 },
 ];

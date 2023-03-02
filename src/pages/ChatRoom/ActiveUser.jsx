@@ -1,6 +1,6 @@
-import React from 'react';
-import { Typography } from '@mui/material';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import React from "react";
+import { Typography } from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 function ActiveUser() {
   return (
@@ -10,14 +10,14 @@ function ActiveUser() {
       </div>
       <div className="user-chat-list-card">
         <div className="user-chat-list-card-container">
-          <AccountCircleIcon style={{ marginLeft: '5px' }} />
-          <Typography variant="body1" style={{ marginLeft: '12px' }}>
+          <AccountCircleIcon style={{ marginLeft: "5px" }} />
+          <Typography variant="body1" style={{ marginLeft: "12px" }}>
             Pranay pratap singh
           </Typography>
         </div>
         <div className="user-chat-list-card-container">
-          <AccountCircleIcon style={{ marginLeft: '5px' }} />
-          <Typography variant="body1" style={{ marginLeft: '12px' }}>
+          <AccountCircleIcon style={{ marginLeft: "5px" }} />
+          <Typography variant="body1" style={{ marginLeft: "12px" }}>
             Pranay pratap singh
           </Typography>
         </div>

@@ -1,34 +1,34 @@
-import React from 'react';
-import Link from '@mui/material/Link';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import React from "react";
+import Link from "@mui/material/Link";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme({
   components: {
     MuiLink: {
       styleOverrides: {
         root: {
-          color: '#000000',
-          position: 'relative',
-          fontWeight: '500',
+          color: "#000000",
+          position: "relative",
+          fontWeight: "500",
         },
         underlineHover: {
-          '::before': {
+          "::before": {
             content: "''",
-            position: 'absolute',
-            display: 'block',
-            width: '100%',
-            height: '1.5px',
+            position: "absolute",
+            display: "block",
+            width: "100%",
+            height: "1.5px",
             bottom: 0,
             left: 0,
-            backgroundColor: '#000',
-            transform: 'scaleX(0)',
-            transition: 'transform 0.3s ease',
+            backgroundColor: "#000",
+            transform: "scaleX(0)",
+            transition: "transform 0.3s ease",
           },
-          ':hover': {
-            textDecoration: 'none',
+          ":hover": {
+            textDecoration: "none",
           },
-          ':hover::before': {
-            transform: 'scaleX(1)',
+          ":hover::before": {
+            transform: "scaleX(1)",
           },
         },
       },

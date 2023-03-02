@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { Grid, Typography } from '@mui/material';
-import './chatroom.css';
-import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
-import AllUser from './AllUser';
-import ActiveUser from './ActiveUser';
-import { allUsers } from '../../axios/chatroom';
+import React, { useEffect, useState } from "react";
+import { Grid, Typography } from "@mui/material";
+import "./chatroom.css";
+import SpeakerNotesIcon from "@mui/icons-material/SpeakerNotes";
+import AllUser from "./AllUser";
+import ActiveUser from "./ActiveUser";
+import { allUsers } from "../../axios/chatroom";
 
 function ChatRoom() {
+
   const [users, setUsers] = useState([]);
   useEffect(() => {
     allUsers().then((resp) => {
