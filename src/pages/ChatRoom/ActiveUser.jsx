@@ -1,10 +1,10 @@
 import React from "react";
-import { Typography } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 function ActiveUser() {
   return (
-    <>
+    <Container>
       <div className="user-chat-active-head">
         <Typography variant="h6">Active Users</Typography>
       </div>
@@ -22,7 +22,7 @@ function ActiveUser() {
           </Typography>
         </div>
       </div>
-    </>
+    </Container>
   );
 }
 

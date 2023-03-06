@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { Typography } from "@mui/material";
+import { Typography , Link } from "@mui/material";
 import CBSearch from "../../components/Search/CBSearch";
 
-function AllUser({ users }) {
+function AllUser({ users , loadChat }) {
   const [allusers, setAllUsers] = useState([]);
   const [searchText, setsearchText] = useState("");
   const search = (e) => {
@@ -23,7 +23,7 @@ function AllUser({ users }) {
     } else {
       setAllUsers(users);
     }
-  }, [searchText]);
+  }, [searchText]);  
   return (
     <>
       <div className="user-chat-search-bar">
@@ -32,12 +32,12 @@ function AllUser({ users }) {
       <div className="user-chat-list-card">
         {
           allusers.length > 0 ? allusers.map((user, index) => (
-            <div key={index}>
+            <Link key={index+user.id} className="user-list-title" onClick={()=>{loadChat(user.id)}} role="presentation">
               <AccountCircleIcon style={{ fontSize: "40px" }} />
               <Typography variant="h6" style={{ marginLeft: "12px" }}>
                 {user.displayName}
               </Typography>
-            </div>
+            </Link>
           )) : (
             <div>
               <Typography variant="h6" style={{ marginLeft: "12px" }}>
