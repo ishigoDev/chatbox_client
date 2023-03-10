@@ -4,7 +4,7 @@ import "./chatroom.css"
 import SpeakerNotesIcon from "@mui/icons-material/SpeakerNotes"
 import AllUser from "./AllUser"
 import ActiveUser from "./ActiveUser"
-import { allUsers, fetchChat } from "../../axios/chatroom"
+import { allUsers, fetchChat, sendMessage } from "../../axios/chatroom"
 import AccountCircleIcon from "@mui/icons-material/AccountCircle"
 import CBTextField from "../../components/CBTextField/CBTextField"
 import CBButton from "../../components/CBButton/CBButton"
@@ -16,6 +16,7 @@ function ChatRoom() {
   const [activeChat, setActiveChat] = useState("")
   const [activeChatRoom, setActiveChatRoom] = useState([])
   const [users, setUsers] = useState([])
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false)
   useEffect(() => {
     allUsers().then((resp) => {
@@ -36,6 +37,16 @@ function ChatRoom() {
       return user.id == id
     })
     setActiveChat(activeUser)
+  }
+  const sendMessageEvent = ()=>{    
+    if(message !== ""){     
+      sendMessage(activeChat[0]?.id,message).then((response)=>{
+        if(response?.data?.status  == 200)
+          setMessage("");        
+      }).catch((err)=>{
+        console.log(err);
+      })
+    }
   }
   return (
     <Grid container style={{ height: "86vH" }}>
@@ -82,16 +93,25 @@ function ChatRoom() {
                     variant="outlined"
                     required
                     size="small"
+                    value={message}
                     style={{
                       width: "90%",
                       backgroundColor: "#ffb7005e",
                       color: "#ffff !important",
                     }}
+                    onChange={(e)=>{setMessage(e.target.value)}}
+                    onKeyPress={(event) => {              
+                      if (event.charCode == '13'){
+                        sendMessageEvent()     
+                      }
+                    }
+                  }
                   />
                   <CBButton
                     variant="text"
                     size="small"
                     className="send-message"
+                    onClick={sendMessageEvent}                    
                   >
                     <SendIcon />
                   </CBButton>
