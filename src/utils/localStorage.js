@@ -18,3 +18,10 @@ export const getToken = () => {
   removeToken();
   return false;
 };
+export const getUserId = () => {
+  if (localStorage.getItem("userId") !== null) {
+    return localStorage.userId;
+  }
+  removeToken();
+  return false;
+};

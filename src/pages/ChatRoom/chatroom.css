@@ -139,3 +139,8 @@
     min-width:40px !important;
     border-radius:50% !important;
 }
+.chat-loader-active{
+display: flex;
+align-items: center;
+justify-content: center;
+}
