@@ -11,7 +11,8 @@ import CBButton from "../../components/CBButton/CBButton"
 import CBLoader from "../../components/CBLoader/CBLoader"
 import SendIcon from "@mui/icons-material/Send"
 import { getUserId } from "../../utils/localStorage"
-
+import {format } from "timeago.js"
+import InputEmoji from "react-input-emoji"
 function ChatRoom() {
   const [activeChat, setActiveChat] = useState("")
   const [activeChatRoom, setActiveChatRoom] = useState([])
@@ -82,30 +83,22 @@ function ChatRoom() {
                   return ( 
                     <div className={`chatmessage-box ${x.sender_id === getUserId() ? 'active-user-2':'active-user-1'}`} key={x.id}>
                       {x.message}
+                      <div style={{marginTop:'10px'}}><Typography variant="caption" style={{color:'rgba(0,0,0,0.5)',fontSize:'10px'}}>{format(x.created_at)}</Typography></div>
                       <div id={`${x.sender_id === getUserId() ? 'pointer-sender':'pointer-receiver'}`}></div>
                     </div>
                     )                  
                   }                    
                   ) : null}
                 </div>
-                <div className="message-text-area">
-                  <CBTextField
-                    variant="outlined"
-                    required
-                    size="small"
-                    value={message}
-                    style={{
-                      width: "90%",
-                      backgroundColor: "#ffb7005e",
-                      color: "#ffff !important",
-                    }}
-                    onChange={(e)=>{setMessage(e.target.value)}}
-                    onKeyPress={(event) => {              
-                      if (event.charCode == '13'){
-                        sendMessageEvent()     
-                      }
-                    }
-                  }
+                <div className="message-text-area">                
+                  <InputEmoji
+                  value={message}
+                  onChange={(text)=>setMessage(text)}
+                  cleanOnEnter
+                  onEnter={sendMessageEvent}
+                  placeholder="Type a message"
+                  fontFamily={'Inter Tight'}
+                  borderColor='orange'                
                   />
                   <CBButton
                     variant="text"
