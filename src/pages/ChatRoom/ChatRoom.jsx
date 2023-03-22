@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState , useRef } from "react"
 import { Grid, Typography } from "@mui/material"
 import "./chatroom.css"
 import SpeakerNotesIcon from "@mui/icons-material/SpeakerNotes"
@@ -13,15 +13,29 @@ import SendIcon from "@mui/icons-material/Send"
 import { getUserId } from "../../utils/localStorage"
 import {format } from "timeago.js"
 import InputEmoji from "react-input-emoji"
+import socketClient  from "socket.io-client";
 function ChatRoom() {
   const [activeChat, setActiveChat] = useState("")
   const [activeChatRoom, setActiveChatRoom] = useState([])
   const [users, setUsers] = useState([])
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false)
+  const [activeUsers,setActiveUsers] = useState([]);
+  const socket = useRef();
   useEffect(() => {
     allUsers().then((resp) => {
       setUsers(resp.data.users)
+    })
+    socket.current = socketClient('localhost:4000',{      
+      transports: ['websocket'],      
+      withCredentials: true,
+    });
+    socket.current.emit('new-user-add',getUserId())
+    socket.current.on('get-users',(users)=>{
+      const onlineUsers = users.filter((user)=>{
+        return user.id !== getUserId();
+      })
+      setActiveUsers(onlineUsers);
     })
   }, [])
   useEffect(() => {
@@ -115,7 +129,7 @@ function ChatRoom() {
         )}
       </Grid>
       <Grid item xs={6} md={2} className="chatroom">
-        <ActiveUser />
+        <ActiveUser activeUsers={activeUsers} />
       </Grid>
     </Grid>
   )
