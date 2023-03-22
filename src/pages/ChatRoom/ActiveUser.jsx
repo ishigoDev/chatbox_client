@@ -3,7 +3,6 @@ import { Container, Typography } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 function ActiveUser({activeUsers}) {
-  console.log(activeUsers);
   return (
     <Container>
       <div className="user-chat-active-head">

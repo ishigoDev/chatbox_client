@@ -1,41 +1,41 @@
-import React, { useEffect, useState , useRef } from "react"
-import { Grid, Typography } from "@mui/material"
-import "./chatroom.css"
-import SpeakerNotesIcon from "@mui/icons-material/SpeakerNotes"
-import AllUser from "./AllUser"
-import ActiveUser from "./ActiveUser"
-import { allUsers, fetchChat, sendMessage } from "../../axios/chatroom"
-import AccountCircleIcon from "@mui/icons-material/AccountCircle"
-import CBTextField from "../../components/CBTextField/CBTextField"
-import CBButton from "../../components/CBButton/CBButton"
-import CBLoader from "../../components/CBLoader/CBLoader"
-import SendIcon from "@mui/icons-material/Send"
-import { getUserId } from "../../utils/localStorage"
-import {format } from "timeago.js"
-import InputEmoji from "react-input-emoji"
-import socketClient  from "socket.io-client";
+import React, { useEffect, useState, useRef } from 'react'
+import { Grid, Typography } from '@mui/material'
+import './chatroom.css'
+import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes'
+import AllUser from './AllUser'
+import ActiveUser from './ActiveUser'
+import { allUsers, fetchChat, sendMessage } from '../../axios/chatroom'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import CBTextField from '../../components/CBTextField/CBTextField'
+import CBButton from '../../components/CBButton/CBButton'
+import CBLoader from '../../components/CBLoader/CBLoader'
+import SendIcon from '@mui/icons-material/Send'
+import { getUserId } from '../../utils/localStorage'
+import { format } from 'timeago.js'
+import InputEmoji from 'react-input-emoji'
+import socketClient from 'socket.io-client'
 function ChatRoom() {
-  const [activeChat, setActiveChat] = useState("")
+  const [activeChat, setActiveChat] = useState('')
   const [activeChatRoom, setActiveChatRoom] = useState([])
   const [users, setUsers] = useState([])
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
-  const [activeUsers,setActiveUsers] = useState([]);
-  const socket = useRef();
+  const [activeUsers, setActiveUsers] = useState([])
+  const socket = useRef()
   useEffect(() => {
     allUsers().then((resp) => {
       setUsers(resp.data.users)
     })
-    socket.current = socketClient('localhost:4000',{      
-      transports: ['websocket'],      
+    socket.current = socketClient('localhost:4000', {
+      transports: ['websocket'],
       withCredentials: true,
-    });
-    socket.current.emit('new-user-add',getUserId())
-    socket.current.on('get-users',(users)=>{
-      const onlineUsers = users.filter((user)=>{
-        return user.id !== getUserId();
+    })
+    socket.current.emit('new-user-add', getUserId())
+    socket.current.on('get-users', (users) => {
+      const onlineUsers = users.filter((user) => {
+        return user.id !== getUserId()
       })
-      setActiveUsers(onlineUsers);
+      setActiveUsers(onlineUsers)
     })
   }, [])
   useEffect(() => {
@@ -53,18 +53,19 @@ function ChatRoom() {
     })
     setActiveChat(activeUser)
   }
-  const sendMessageEvent = ()=>{    
-    if(message !== ""){     
-      sendMessage(activeChat[0]?.id,message).then((response)=>{
-        if(response?.data?.status  == 200)
-          setMessage("");        
-      }).catch((err)=>{
-        console.log(err);
-      })
+  const sendMessageEvent = () => {
+    if (message !== '') {
+      sendMessage(activeChat[0]?.id, message)
+        .then((response) => {
+          if (response?.data?.status == 200) setMessage('')
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
   }
   return (
-    <Grid container style={{ height: "86vH" }}>
+    <Grid container style={{ height: '86vH' }}>
       <Grid item xs={6} md={3} className="chatroom user-chat-list">
         <AllUser users={users} loadChat={loadChat} />
       </Grid>
@@ -77,48 +78,88 @@ function ChatRoom() {
             </div>
           </div>
         ) : (
-          <div className={`active-user-chatroom ${loading ? "chat-loader-active":""}`}>
+          <div
+            className={`active-user-chatroom ${
+              loading ? 'chat-loader-active' : ''
+            }`}
+          >
             {loading ? (
               <div>
-                <CBLoader/>
+                <CBLoader />
               </div>
             ) : (
               <>
                 <div className="user-details">
                   <AccountCircleIcon
-                    style={{ fontSize: "40px", marginLeft: "20px" }}
+                    style={{ fontSize: '48px', marginLeft: '20px' }}
                   />
-                  <Typography variant="h6" className="user-active-name">
-                    {activeChat[0].displayName}
-                  </Typography>
+                  <div>
+                    <Typography variant="h6" className="user-active-name">
+                      {activeChat[0].displayName}
+                    </Typography>
+                    {activeUsers.some(
+                      (activeUser) => activeUser.id === activeChat[0]?.id,
+                    ) ? (
+                      <Typography
+                        variant="caption"
+                        className="user-active-name"
+                      >
+                        Online
+                      </Typography>
+                    ) : null}
+                  </div>
                 </div>
                 <div className="active-room">
-                  {activeChatRoom.length !==0 ? activeChatRoom.map((x)=>{                    
-                  return ( 
-                    <div className={`chatmessage-box ${x.sender_id === getUserId() ? 'active-user-2':'active-user-1'}`} key={x.id}>
-                      {x.message}
-                      <div style={{marginTop:'10px'}}><Typography variant="caption" style={{color:'rgba(0,0,0,0.5)',fontSize:'10px'}}>{format(x.created_at)}</Typography></div>
-                      <div id={`${x.sender_id === getUserId() ? 'pointer-sender':'pointer-receiver'}`}></div>
-                    </div>
-                    )                  
-                  }                    
-                  ) : null}
+                  {activeChatRoom.length !== 0
+                    ? activeChatRoom.map((x) => {
+                        return (
+                          <div
+                            className={`chatmessage-box ${
+                              x.sender_id === getUserId()
+                                ? 'active-user-2'
+                                : 'active-user-1'
+                            }`}
+                            key={x.id}
+                          >
+                            {x.message}
+                            <div style={{ marginTop: '10px' }}>
+                              <Typography
+                                variant="caption"
+                                style={{
+                                  color: 'rgba(0,0,0,0.5)',
+                                  fontSize: '10px',
+                                }}
+                              >
+                                {format(x.created_at)}
+                              </Typography>
+                            </div>
+                            <div
+                              id={`${
+                                x.sender_id === getUserId()
+                                  ? 'pointer-sender'
+                                  : 'pointer-receiver'
+                              }`}
+                            ></div>
+                          </div>
+                        )
+                      })
+                    : null}
                 </div>
-                <div className="message-text-area">                
+                <div className="message-text-area">
                   <InputEmoji
-                  value={message}
-                  onChange={(text)=>setMessage(text)}
-                  cleanOnEnter
-                  onEnter={sendMessageEvent}
-                  placeholder="Type a message"
-                  fontFamily={'Inter Tight'}
-                  borderColor='orange'                
+                    value={message}
+                    onChange={(text) => setMessage(text)}
+                    cleanOnEnter
+                    onEnter={sendMessageEvent}
+                    placeholder="Type a message"
+                    fontFamily={'Inter Tight'}
+                    borderColor="orange"
                   />
                   <CBButton
                     variant="text"
                     size="small"
                     className="send-message"
-                    onClick={sendMessageEvent}                    
+                    onClick={sendMessageEvent}
                   >
                     <SendIcon />
                   </CBButton>
