@@ -21,8 +21,10 @@ function ChatRoom() {
   const [loading, setLoading] = useState(false)
   const [activeUsers, setActiveUsers] = useState([])
   const [sendSocketMessage, setSendSocketMessage] = useState(null)
+  const [typingState, setTypingState] = useState(false);
   const socket = useRef()
   const scrollToEnd = useRef()
+  const receiverId = activeChat[0]?.id;
   useEffect(() => {
     allUsers().then((resp) => {
       setUsers(resp.data.users)
@@ -37,7 +39,7 @@ function ChatRoom() {
         return user.id !== getUserId()
       })
       setActiveUsers(onlineUsers)
-    })
+    })   
   }, [])
   useEffect(() => {
     if (sendSocketMessage) {
@@ -52,13 +54,26 @@ function ChatRoom() {
   }, [activeChatRoom])
   useEffect(() => {
     setLoading(true)
-    if (activeChat[0]?.id) {
-      fetchChat(activeChat[0]?.id).then((resp) => {
+    if (receiverId) {
+      fetchChat(receiverId).then((resp) => {
         setActiveChatRoom(resp.data.message)
         setLoading(false)
       })
     }
   }, [activeChat])
+  useEffect(()=>{
+    const delayDebounceFn = setTimeout(() => {
+      socket.current.emit('typing',{typing:true,receiverId:receiverId});
+    }, 100)
+    const delay = setTimeout(() =>{
+      socket.current.emit('typing',{typing:false,receiverId:receiverId})
+    },800)
+    socket.current.on('typing-user',(typing)=>{
+      setTypingState(typing)
+    })
+    return () => {clearTimeout(delayDebounceFn)
+    clearTimeout(delay)}
+  },[message])
   const loadChat = (id) => {
     const activeUser = users.filter((user) => {
       return user.id == id
@@ -67,12 +82,12 @@ function ChatRoom() {
   }
   const sendMessageEvent = () => {
     if (message !== '') {
-      sendMessage(activeChat[0]?.id, message)
+      sendMessage(receiverId, message)
         .then((response) => {
           setActiveChatRoom([...activeChatRoom, response?.data?.message])
           setSendSocketMessage({
             activeChatRoom: [...activeChatRoom, response?.data?.message],
-            receiverId: activeChat[0]?.id,
+            receiverId: receiverId,
           })
           if (response?.data?.status == 200) setMessage('')
         })
@@ -119,14 +134,23 @@ function ChatRoom() {
                       {activeChat[0].displayName}
                     </Typography>
                     {activeUsers.some(
-                      (activeUser) => activeUser.id === activeChat[0]?.id,
+                      (activeUser) => activeUser.id === receiverId,
                     ) ? (
-                      <Typography
+                      typingState ? (
+                        <Typography
+                        variant="caption"
+                        className="user-active-name"
+                      >
+                        Typing...
+                      </Typography>
+                      ):(
+                        <Typography
                         variant="caption"
                         className="user-active-name"
                       >
                         Online
                       </Typography>
+                      )                       
                     ) : null}
                   </div>
                 </div>
