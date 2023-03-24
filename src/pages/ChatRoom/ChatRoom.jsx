@@ -6,7 +6,6 @@ import AllUser from './AllUser'
 import ActiveUser from './ActiveUser'
 import { allUsers, fetchChat, sendMessage } from '../../axios/chatroom'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import CBTextField from '../../components/CBTextField/CBTextField'
 import CBButton from '../../components/CBButton/CBButton'
 import CBLoader from '../../components/CBLoader/CBLoader'
 import SendIcon from '@mui/icons-material/Send'
@@ -21,7 +20,9 @@ function ChatRoom() {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [activeUsers, setActiveUsers] = useState([])
+  const [sendSocketMessage,setSendSocketMessage] = useState(null);
   const socket = useRef()
+  const scrollToEnd = useRef();
   useEffect(() => {
     allUsers().then((resp) => {
       setUsers(resp.data.users)
@@ -38,6 +39,17 @@ function ChatRoom() {
       setActiveUsers(onlineUsers)
     })
   }, [])
+  useEffect(()=>{    
+    if(sendSocketMessage){     
+      socket.current.emit('send-message',sendSocketMessage)
+      setSendSocketMessage(null);      
+    }
+  },[sendSocketMessage])
+  useEffect(()=>{
+    socket.current.on('receive-message',(message)=>{
+      setActiveChatRoom(message);
+    })
+  },[activeChatRoom])
   useEffect(() => {
     setLoading(true)
     if (activeChat[0]?.id) {
@@ -54,16 +66,22 @@ function ChatRoom() {
     setActiveChat(activeUser)
   }
   const sendMessageEvent = () => {
-    if (message !== '') {
+    if (message !== '') {      
       sendMessage(activeChat[0]?.id, message)
         .then((response) => {
-          if (response?.data?.status == 200) setMessage('')
+          setActiveChatRoom([...activeChatRoom, response?.data?.message])
+          setSendSocketMessage({activeChatRoom:[...activeChatRoom, response?.data?.message],receiverId:activeChat[0]?.id})
+          if (response?.data?.status == 200) setMessage('')          
         })
         .catch((err) => {
           console.log(err)
         })
     }
   }
+  //scroll to last message
+  useEffect(()=>{
+    scrollToEnd?.current?.scrollIntoView({behaviour: 'smooth'})
+  },[activeChatRoom])
   return (
     <Grid container style={{ height: '86vH' }}>
       <Grid item xs={6} md={3} className="chatroom user-chat-list">
@@ -114,6 +132,7 @@ function ChatRoom() {
                     ? activeChatRoom.map((x) => {
                         return (
                           <div
+                          ref={scrollToEnd}
                             className={`chatmessage-box ${
                               x.sender_id === getUserId()
                                 ? 'active-user-2'
