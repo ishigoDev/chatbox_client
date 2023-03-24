@@ -21,10 +21,10 @@ function ChatRoom() {
   const [loading, setLoading] = useState(false)
   const [activeUsers, setActiveUsers] = useState([])
   const [sendSocketMessage, setSendSocketMessage] = useState(null)
-  const [typingState, setTypingState] = useState(false);
+  const [typingState, setTypingState] = useState(false)
   const socket = useRef()
   const scrollToEnd = useRef()
-  const receiverId = activeChat[0]?.id;
+  const receiverId = activeChat[0]?.id
   useEffect(() => {
     allUsers().then((resp) => {
       setUsers(resp.data.users)
@@ -39,7 +39,7 @@ function ChatRoom() {
         return user.id !== getUserId()
       })
       setActiveUsers(onlineUsers)
-    })   
+    })
   }, [])
   useEffect(() => {
     if (sendSocketMessage) {
@@ -61,19 +61,21 @@ function ChatRoom() {
       })
     }
   }, [activeChat])
-  useEffect(()=>{
+  useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      socket.current.emit('typing',{typing:true,receiverId:receiverId});
+      socket.current.emit('typing', { typing: true, receiverId: receiverId })
     }, 100)
-    const delay = setTimeout(() =>{
-      socket.current.emit('typing',{typing:false,receiverId:receiverId})
-    },800)
-    socket.current.on('typing-user',(typing)=>{
+    const delay = setTimeout(() => {
+      socket.current.emit('typing', { typing: false, receiverId: receiverId })
+    }, 800)
+    socket.current.on('typing-user', (typing) => {
       setTypingState(typing)
     })
-    return () => {clearTimeout(delayDebounceFn)
-    clearTimeout(delay)}
-  },[message])
+    return () => {
+      clearTimeout(delayDebounceFn)
+      clearTimeout(delay)
+    }
+  }, [message])
   const loadChat = (id) => {
     const activeUser = users.filter((user) => {
       return user.id == id
@@ -138,19 +140,19 @@ function ChatRoom() {
                     ) ? (
                       typingState ? (
                         <Typography
-                        variant="caption"
-                        className="user-active-name"
-                      >
-                        Typing...
-                      </Typography>
-                      ):(
+                          variant="caption"
+                          className="user-active-name"
+                        >
+                          Typing...
+                        </Typography>
+                      ) : (
                         <Typography
-                        variant="caption"
-                        className="user-active-name"
-                      >
-                        Online
-                      </Typography>
-                      )                       
+                          variant="caption"
+                          className="user-active-name"
+                        >
+                          Online
+                        </Typography>
+                      )
                     ) : null}
                   </div>
                 </div>
