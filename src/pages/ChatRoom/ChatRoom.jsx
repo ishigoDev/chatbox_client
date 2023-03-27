@@ -6,7 +6,6 @@ import AllUser from './AllUser'
 import ActiveUser from './ActiveUser'
 import { allUsers, fetchChat, sendMessage } from '../../axios/chatroom'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import CBTextField from '../../components/CBTextField/CBTextField'
 import CBButton from '../../components/CBButton/CBButton'
 import CBLoader from '../../components/CBLoader/CBLoader'
 import SendIcon from '@mui/icons-material/Send'
@@ -14,6 +13,7 @@ import { getUserId } from '../../utils/localStorage'
 import { format } from 'timeago.js'
 import InputEmoji from 'react-input-emoji'
 import socketClient from 'socket.io-client'
+import { NotificationManager } from 'react-notifications'
 function ChatRoom() {
   const [activeChat, setActiveChat] = useState('')
   const [activeChatRoom, setActiveChatRoom] = useState([])
@@ -21,7 +21,11 @@ function ChatRoom() {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [activeUsers, setActiveUsers] = useState([])
+  const [sendSocketMessage, setSendSocketMessage] = useState(null)
+  const [typingState, setTypingState] = useState(false)
   const socket = useRef()
+  const scrollToEnd = useRef()
+  const receiverId = activeChat[0]?.id
   useEffect(() => {
     allUsers().then((resp) => {
       setUsers(resp.data.users)
@@ -39,14 +43,40 @@ function ChatRoom() {
     })
   }, [])
   useEffect(() => {
+    if (sendSocketMessage) {
+      socket.current.emit('send-message', sendSocketMessage)
+      setSendSocketMessage(null)
+    }
+  }, [sendSocketMessage])
+  useEffect(() => {
+    socket.current.on('receive-message', (message) => {
+      setActiveChatRoom(message)
+    })
+  }, [activeChatRoom])
+  useEffect(() => {
     setLoading(true)
-    if (activeChat[0]?.id) {
-      fetchChat(activeChat[0]?.id).then((resp) => {
+    if (receiverId) {
+      fetchChat(receiverId).then((resp) => {
         setActiveChatRoom(resp.data.message)
         setLoading(false)
       })
     }
   }, [activeChat])
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      socket.current.emit('typing', { typing: true, receiverId: receiverId })
+    }, 100)
+    const delay = setTimeout(() => {
+      socket.current.emit('typing', { typing: false, receiverId: receiverId })
+    }, 800)
+    socket.current.on('typing-user', (typing) => {
+      setTypingState(typing)
+    })
+    return () => {
+      clearTimeout(delayDebounceFn)
+      clearTimeout(delay)
+    }
+  }, [message])
   const loadChat = (id) => {
     const activeUser = users.filter((user) => {
       return user.id == id
@@ -55,15 +85,24 @@ function ChatRoom() {
   }
   const sendMessageEvent = () => {
     if (message !== '') {
-      sendMessage(activeChat[0]?.id, message)
+      sendMessage(receiverId, message)
         .then((response) => {
+          setActiveChatRoom([...activeChatRoom, response?.data?.message])
+          setSendSocketMessage({
+            activeChatRoom: [...activeChatRoom, response?.data?.message],
+            receiverId: receiverId,
+          })
           if (response?.data?.status == 200) setMessage('')
         })
         .catch((err) => {
-          console.log(err)
+          NotificationManager.error(err?.data,'Something went wrong',1500)
         })
     }
   }
+  //scroll to last message
+  useEffect(() => {
+    scrollToEnd?.current?.scrollIntoView({ behaviour: 'smooth' })
+  }, [activeChatRoom])
   return (
     <Grid container style={{ height: '86vH' }}>
       <Grid item xs={6} md={3} className="chatroom user-chat-list">
@@ -98,14 +137,23 @@ function ChatRoom() {
                       {activeChat[0].displayName}
                     </Typography>
                     {activeUsers.some(
-                      (activeUser) => activeUser.id === activeChat[0]?.id,
+                      (activeUser) => activeUser.id === receiverId,
                     ) ? (
-                      <Typography
-                        variant="caption"
-                        className="user-active-name"
-                      >
-                        Online
-                      </Typography>
+                      typingState ? (
+                        <Typography
+                          variant="caption"
+                          className="user-active-name"
+                        >
+                          Typing...
+                        </Typography>
+                      ) : (
+                        <Typography
+                          variant="caption"
+                          className="user-active-name"
+                        >
+                          Online
+                        </Typography>
+                      )
                     ) : null}
                   </div>
                 </div>
@@ -114,6 +162,7 @@ function ChatRoom() {
                     ? activeChatRoom.map((x) => {
                         return (
                           <div
+                            ref={scrollToEnd}
                             className={`chatmessage-box ${
                               x.sender_id === getUserId()
                                 ? 'active-user-2'
