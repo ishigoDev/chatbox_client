@@ -84,6 +84,7 @@
     display:flex;
     align-items: center;
     justify-content: space-evenly;
+    padding:5px 10px
 }
 .user-active-name{
     margin-left: 10px !important;
@@ -118,8 +119,8 @@
     position:absolute;
     width: 3px;
     height: 0;
-    top: 2px;
-    right: -11px;
+    top: 0px;
+    right: -9.256px;
     transform:rotate(90deg);
 }
 #pointer-receiver{
@@ -129,8 +130,8 @@
     position:absolute;
     width: 3px;
     height: 0;
-    top: 2px;
-    left: -11px;
+    top: 0px;
+    left: -9.5px;
     transform:rotate(270deg);
 }
 .send-message{
@@ -143,4 +144,7 @@
 display: flex;
 align-items: center;
 justify-content: center;
+}
+.react-input-emoji--button svg{
+    fill:rgb(255 220 128) !important
 }
