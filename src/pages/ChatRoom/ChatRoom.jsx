@@ -13,6 +13,7 @@ import { getUserId } from '../../utils/localStorage'
 import { format } from 'timeago.js'
 import InputEmoji from 'react-input-emoji'
 import socketClient from 'socket.io-client'
+import { NotificationManager } from 'react-notifications'
 function ChatRoom() {
   const [activeChat, setActiveChat] = useState('')
   const [activeChatRoom, setActiveChatRoom] = useState([])
@@ -94,7 +95,7 @@ function ChatRoom() {
           if (response?.data?.status == 200) setMessage('')
         })
         .catch((err) => {
-          console.log(err)
+          NotificationManager.error(err?.data,'Something went wrong',1500)
         })
     }
   }
