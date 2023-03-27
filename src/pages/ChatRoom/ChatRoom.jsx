@@ -106,7 +106,7 @@ function ChatRoom() {
   return (
     <Grid container style={{ height: '86vH' }}>
       <Grid item xs={6} md={3} className="chatroom user-chat-list">
-        <AllUser users={users} loadChat={loadChat} />
+        <AllUser users={users} loadChat={loadChat} activeUserChat={activeChat} />
       </Grid>
       <Grid item xs={6} md={7} className="chatroom chatroom-message-containter">
         {activeChat.length === 0 ? (
