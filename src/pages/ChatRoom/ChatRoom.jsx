@@ -14,6 +14,7 @@ import { format } from 'timeago.js'
 import InputEmoji from 'react-input-emoji'
 import socketClient from 'socket.io-client'
 import { NotificationManager } from 'react-notifications'
+import { DoDecrypt, DoEncrypt } from '../../utils/encrpytion'
 function ChatRoom() {
   const [activeChat, setActiveChat] = useState('')
   const [activeChatRoom, setActiveChatRoom] = useState([])
@@ -85,7 +86,7 @@ function ChatRoom() {
   }
   const sendMessageEvent = () => {
     if (message !== '') {
-      sendMessage(receiverId, message)
+      sendMessage(receiverId, DoEncrypt(message))
         .then((response) => {
           setActiveChatRoom([...activeChatRoom, response?.data?.message])
           setSendSocketMessage({
@@ -170,7 +171,7 @@ function ChatRoom() {
                             }`}
                             key={x.id}
                           >
-                            {x.message}
+                            {DoDecrypt(x.message)}
                             <div style={{ marginTop: '10px' }}>
                               <Typography
                                 variant="caption"
