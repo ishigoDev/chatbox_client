@@ -15,6 +15,8 @@ import InputEmoji from 'react-input-emoji'
 import socketClient from 'socket.io-client'
 import { NotificationManager } from 'react-notifications'
 import { DoDecrypt, DoEncrypt } from '../../utils/encrpytion'
+import { getLastSeen } from 'last-seen-ago'
+import moment from 'moment'
 function ChatRoom() {
   const [activeChat, setActiveChat] = useState('')
   const [activeChatRoom, setActiveChatRoom] = useState([])
@@ -103,13 +105,13 @@ function ChatRoom() {
   //scroll to last message
   useEffect(() => {
     scrollToEnd?.current?.scrollIntoView({ behaviour: 'smooth' })
-  }, [activeChatRoom])
+  }, [activeChatRoom])  
   return (
     <Grid container style={{ height: '86vH' }}>
-      <Grid item xs={6} md={3} className="chatroom user-chat-list">
+      <Grid item xs={4} sm={4} md={3} className="chatroom user-chat-list">
         <AllUser users={users} loadChat={loadChat} activeUserChat={activeChat} />
       </Grid>
-      <Grid item xs={6} md={7} className="chatroom chatroom-message-containter">
+      <Grid item xs={8} sm={8} md={7} className="chatroom chatroom-message-containter">
         {activeChat.length === 0 ? (
           <div className="welcome-page-chatroom">
             <div className="chat-message">
@@ -155,7 +157,16 @@ function ChatRoom() {
                           Online
                         </Typography>
                       )
-                    ) : null}
+                    ) : (
+                      activeChat[0].last_seen ? 
+                      <Typography
+                      variant="caption"
+                      className="user-active-name"
+                    >                      
+                      {`Last seen ${getLastSeen(moment(activeChat[0].last_seen).unix())}`}
+                    </Typography>
+                    : null
+                    )}
                   </div>
                 </div>
                 <div className="active-room">
@@ -219,7 +230,7 @@ function ChatRoom() {
           </div>
         )}
       </Grid>
-      <Grid item xs={6} md={2} className="chatroom">
+      <Grid item sx={{display:{xs:'none',sm:'none',md:'block',lg:'block'}}} sm={{display:'none'}} md={2} className="chatroom">
         <ActiveUser activeUsers={activeUsers} />
       </Grid>
     </Grid>
