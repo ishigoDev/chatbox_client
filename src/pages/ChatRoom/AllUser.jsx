@@ -4,7 +4,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Typography , Link } from "@mui/material";
 import CBSearch from "../../components/Search/CBSearch";
 
-function AllUser({ users , loadChat }) {
+function AllUser({ users , loadChat , activeUserChat}) {
   const [allusers, setAllUsers] = useState([]);
   const [searchText, setsearchText] = useState("");
   const search = (e) => {
@@ -32,7 +32,7 @@ function AllUser({ users , loadChat }) {
       <div className="user-chat-list-card">
         {
           allusers.length > 0 ? allusers.map((user, index) => (
-            <Link key={index+user.id} className="user-list-title" onClick={()=>{loadChat(user.id)}} role="presentation">
+            <Link key={index+user.id} className={`user-list-title ${user.id === activeUserChat[0]?.id ?'active-user-chat':null}`} onClick={()=>{loadChat(user.id)}} role="presentation">
               <AccountCircleIcon style={{ fontSize: "40px" }} />
               <Typography variant="h6" style={{ marginLeft: "12px" }}>
                 {user.displayName}
