@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef , useContext } from 'react'
 import { Grid, Typography } from '@mui/material'
 import './chatroom.css'
 import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes'
@@ -12,7 +12,7 @@ import SendIcon from '@mui/icons-material/Send'
 import { getUserId } from '../../utils/localStorage'
 import { format } from 'timeago.js'
 import InputEmoji from 'react-input-emoji'
-import socketClient from 'socket.io-client'
+import {SocketContext} from '../../utils/socket'
 import { NotificationManager } from 'react-notifications'
 import { DoDecrypt, DoEncrypt } from '../../utils/encrpytion'
 import { getLastSeen } from 'last-seen-ago'
@@ -29,14 +29,13 @@ function ChatRoom() {
   const socket = useRef()
   const scrollToEnd = useRef()
   const receiverId = activeChat[0]?.id
+  const socketInit = useContext(SocketContext);
+  console.log(socketInit)
   useEffect(() => {
     allUsers().then((resp) => {
       setUsers(resp.data.users)
     })
-    socket.current = socketClient('localhost:4000', {
-      transports: ['websocket'],
-      withCredentials: true,
-    })
+    socket.current = socketInit;
     socket.current.emit('new-user-add', getUserId())
     socket.current.on('get-users', (users) => {
       const onlineUsers = users.filter((user) => {
@@ -47,6 +46,7 @@ function ChatRoom() {
   }, [])
   useEffect(() => {
     if (sendSocketMessage) {
+      socket.current.emit('typing', { typing: false, receiverId: receiverId })
       socket.current.emit('send-message', sendSocketMessage)
       setSendSocketMessage(null)
     }
@@ -71,7 +71,7 @@ function ChatRoom() {
     }, 100)
     const delay = setTimeout(() => {
       socket.current.emit('typing', { typing: false, receiverId: receiverId })
-    }, 800)
+    }, 300)
     socket.current.on('typing-user', (typing) => {
       setTypingState(typing)
     })
