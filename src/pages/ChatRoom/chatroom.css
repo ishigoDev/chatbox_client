@@ -148,3 +148,17 @@ justify-content: center;
 .react-input-emoji--button svg{
     fill:rgb(255 220 128) !important
 }
+.active-room::-webkit-scrollbar{
+    width: 5px;
+}
+.active-room::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgb(255, 239, 200);
+}
+.active-room::-webkit-scrollbar-thumb {
+    background-color: orange;
+    outline: 1px solid orange;
+}
+.user-chat-list > .user-chat-list-card > a:hover , .active-user-chat{
+    background-color: #ffe29aa1;
+    border-radius: 4px;
+}
