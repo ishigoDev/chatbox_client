@@ -92,22 +92,29 @@
     text-transform: capitalize;
 }
 .chatmessage-box{
-    width:80%;
+    max-width:80%;
+    min-width:10%;
     min-height:10px;
     height: auto;
     padding: 20px;
     margin:20px 0;
 }
+.active-user-parent-2{
+    display: flex;
+    justify-content: flex-end;
+}
+.active-user-parent-1{
+    display: flex;
+    justify-content: flex-start;
+}
 .active-user-1{
     background-color: #ffffff70;
     text-align: left;
     margin-left:20px;
-    float: left;
     position: relative;
     border-radius: 0 8px 8px 8px;
 }
 .active-user-2{
-    float: right;
     text-align: right;
     margin-right:20px;
     background-color: #ffb7005e;
