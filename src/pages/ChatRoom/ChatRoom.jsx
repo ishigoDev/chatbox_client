@@ -29,8 +29,7 @@ function ChatRoom() {
   const socket = useRef()
   const scrollToEnd = useRef()
   const receiverId = activeChat[0]?.id
-  const socketInit = useContext(SocketContext);
-  console.log(socketInit)
+  const socketInit = useContext(SocketContext);  
   useEffect(() => {
     allUsers().then((resp) => {
       setUsers(resp.data.users)
@@ -44,6 +43,11 @@ function ChatRoom() {
       setActiveUsers(onlineUsers)
     })
   }, [])
+  useEffect(()=>{
+    socket.current.on('user-created-data',(data)=>{            
+      setUsers([...users, data])
+    })
+  },[users])
   useEffect(() => {
     if (sendSocketMessage) {
       socket.current.emit('typing', { typing: false, receiverId: receiverId })
