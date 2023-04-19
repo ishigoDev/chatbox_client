@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useContext , useRef } from "react";
 import { Container } from "@mui/system";
 import { Grid, Typography } from "@mui/material";
 import "./home.css";
@@ -6,6 +6,7 @@ import FormArea from "../../components/FormArea/FormArea";
 import CBTextField from "../../components/CBTextField/CBTextField";
 import CBButton from "../../components/CBButton/CBButton";
 import signUp from "../../axios/signup";
+import { SocketContext } from "../../utils/socket";
 
 function Home() {
   const [loading, setLoading] = useState(false);
@@ -17,6 +18,8 @@ function Home() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [messageError, setMessageError] = useState(false);
+  const socketInit = useContext(SocketContext);  
+  const socket  = useRef();
   const handleFullName = (e) => {
     setFullName(e.target.value);
   };
@@ -62,7 +65,9 @@ function Home() {
       setLoading(true);
       try {
         const response = await signUp({ email, displayName: fullName, password });
-        if (response.data.status === 200) {
+        if (response.data.status === 200) {          
+          socket.current = socketInit;
+          socket.current.emit('user-created', response.data.createdUser)
           setMessage(response.data.message);
           setTimeout(() => {
             window.location.href = "/login";

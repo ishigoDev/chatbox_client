@@ -18,6 +18,7 @@
     text-decoration: none;
     color:black;
     margin-top: 10px;
+    text-transform: capitalize;
 }
 .user-chat-list-card-container{
     display: flex;
@@ -88,6 +89,7 @@
 }
 .user-active-name{
     margin-left: 10px !important;
+    text-transform: capitalize;
 }
 .chatmessage-box{
     width:80%;
