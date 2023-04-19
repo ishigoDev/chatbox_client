@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef , useContext } from 'react'
+import React, { useEffect, useState, useRef, useContext } from 'react'
 import { Grid, Typography } from '@mui/material'
 import './chatroom.css'
 import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes'
@@ -12,7 +12,7 @@ import SendIcon from '@mui/icons-material/Send'
 import { getUserId } from '../../utils/localStorage'
 import { format } from 'timeago.js'
 import InputEmoji from 'react-input-emoji'
-import {SocketContext} from '../../utils/socket'
+import { SocketContext } from '../../utils/socket'
 import { NotificationManager } from 'react-notifications'
 import { DoDecrypt, DoEncrypt } from '../../utils/encrpytion'
 import { getLastSeen } from 'last-seen-ago'
@@ -29,12 +29,12 @@ function ChatRoom() {
   const socket = useRef()
   const scrollToEnd = useRef()
   const receiverId = activeChat[0]?.id
-  const socketInit = useContext(SocketContext);  
+  const socketInit = useContext(SocketContext)
   useEffect(() => {
     allUsers().then((resp) => {
       setUsers(resp.data.users)
     })
-    socket.current = socketInit;
+    socket.current = socketInit
     socket.current.emit('new-user-add', getUserId())
     socket.current.on('get-users', (users) => {
       const onlineUsers = users.filter((user) => {
@@ -43,11 +43,11 @@ function ChatRoom() {
       setActiveUsers(onlineUsers)
     })
   }, [])
-  useEffect(()=>{
-    socket.current.on('user-created-data',(data)=>{            
+  useEffect(() => {
+    socket.current.on('user-created-data', (data) => {
       setUsers([...users, data])
     })
-  },[users])
+  }, [users])
   useEffect(() => {
     if (sendSocketMessage) {
       socket.current.emit('typing', { typing: false, receiverId: receiverId })
@@ -102,20 +102,30 @@ function ChatRoom() {
           if (response?.data?.status == 200) setMessage('')
         })
         .catch((err) => {
-          NotificationManager.error(err?.data,'Something went wrong',1500)
+          NotificationManager.error(err?.data, 'Something went wrong', 1500)
         })
     }
   }
   //scroll to last message
   useEffect(() => {
     scrollToEnd?.current?.scrollIntoView({ behaviour: 'smooth' })
-  }, [activeChatRoom])  
+  }, [activeChatRoom])
   return (
     <Grid container style={{ height: '86vH' }}>
       <Grid item xs={4} sm={4} md={3} className="chatroom user-chat-list">
-        <AllUser users={users} loadChat={loadChat} activeUserChat={activeChat} />
+        <AllUser
+          users={users}
+          loadChat={loadChat}
+          activeUserChat={activeChat}
+        />
       </Grid>
-      <Grid item xs={8} sm={8} md={7} className="chatroom chatroom-message-containter">
+      <Grid
+        item
+        xs={8}
+        sm={8}
+        md={7}
+        className="chatroom chatroom-message-containter"
+      >
         {activeChat.length === 0 ? (
           <div className="welcome-page-chatroom">
             <div className="chat-message">
@@ -161,56 +171,60 @@ function ChatRoom() {
                           Online
                         </Typography>
                       )
-                    ) : (
-                      activeChat[0].last_seen ? 
+                    ) : activeChat[0].last_seen ? (
                       <Typography
-                      variant="caption"
-                      className="user-active-name"
-                    >                      
-                      {`Last seen ${getLastSeen(moment(activeChat[0].last_seen).unix())}`}
-                    </Typography>
-                    : null
-                    )}
+                        variant="caption"
+                        className="user-active-name"
+                      >
+                        {`Last seen ${getLastSeen(
+                          moment(activeChat[0].last_seen).unix(),
+                        )}`}
+                      </Typography>
+                    ) : null}
                   </div>
                 </div>
                 <div className="active-room">
                   {activeChatRoom.length !== 0
                     ? activeChatRoom.map((x) => {
                         return (
-                          <div  className={`${
-                            x.sender_id === getUserId()
-                              ? 'active-user-parent-2'
-                              : 'active-user-parent-1'
-                          }`}>
                           <div
-                            ref={scrollToEnd}
-                            className={`chatmessage-box ${
+                            className={`${
                               x.sender_id === getUserId()
-                                ? 'active-user-2'
-                                : 'active-user-1'
+                                ? 'active-user-parent-2'
+                                : 'active-user-parent-1'
                             }`}
-                            key={x.id}
                           >
-                            {DoDecrypt(x.message)}
-                            <div style={{ marginTop: '6px' }}>
-                              <Typography
-                                variant="caption"
-                                style={{
-                                  color: 'rgba(0,0,0,0.5)',
-                                  fontSize: '10px',
-                                }}
-                              >
-                                {format(x.created_at)}
-                              </Typography>
-                            </div>
                             <div
-                              id={`${
+                              ref={scrollToEnd}
+                              className={`chatmessage-box ${
                                 x.sender_id === getUserId()
-                                  ? 'pointer-sender'
-                                  : 'pointer-receiver'
+                                  ? 'active-user-2'
+                                  : 'active-user-1'
                               }`}
-                            ></div>
-                          </div>
+                              key={x.id}
+                            >
+                              <Typography variant="body2">
+                                {DoDecrypt(x.message)}
+                              </Typography>
+                              <div style={{ textAlign:'right', marginTop: '6px' }}>
+                                <Typography
+                                  variant="caption"
+                                  style={{
+                                    color: 'rgba(0,0,0,0.5)',
+                                    fontSize: '10px',
+                                  }}
+                                >
+                                  {format(x.created_at)}
+                                </Typography>
+                              </div>
+                              <div
+                                id={`${
+                                  x.sender_id === getUserId()
+                                    ? 'pointer-sender'
+                                    : 'pointer-receiver'
+                                }`}
+                              ></div>
+                            </div>
                           </div>
                         )
                       })
@@ -240,7 +254,13 @@ function ChatRoom() {
           </div>
         )}
       </Grid>
-      <Grid item sx={{display:{xs:'none',sm:'none',md:'block',lg:'block'}}} sm={{display:'none'}} md={2} className="chatroom">
+      <Grid
+        item
+        sx={{ display: { xs: 'none', sm: 'none', md: 'block', lg: 'block' } }}
+        sm={{ display: 'none' }}
+        md={2}
+        className="chatroom"
+      >
         <ActiveUser activeUsers={activeUsers} />
       </Grid>
     </Grid>

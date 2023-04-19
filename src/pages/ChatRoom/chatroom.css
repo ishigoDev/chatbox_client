@@ -109,17 +109,17 @@
 }
 .active-user-1{
     background-color: #ffffff70;
-    text-align: left;
     margin-left:20px;
     position: relative;
     border-radius: 0 8px 8px 8px;
+    overflow-wrap: break-word;
 }
-.active-user-2{
-    text-align: right;
+.active-user-2{    
     margin-right:20px;
     background-color: #ffb7005e;
     position: relative;
     border-radius: 8px 0 8px 8px;
+    overflow-wrap: break-word;
 }   
 #pointer-sender{
     border-bottom:solid 10px #ffb7005e;
