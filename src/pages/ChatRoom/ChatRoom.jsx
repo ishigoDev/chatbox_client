@@ -177,6 +177,11 @@ function ChatRoom() {
                   {activeChatRoom.length !== 0
                     ? activeChatRoom.map((x) => {
                         return (
+                          <div  className={`${
+                            x.sender_id === getUserId()
+                              ? 'active-user-parent-2'
+                              : 'active-user-parent-1'
+                          }`}>
                           <div
                             ref={scrollToEnd}
                             className={`chatmessage-box ${
@@ -187,7 +192,7 @@ function ChatRoom() {
                             key={x.id}
                           >
                             {DoDecrypt(x.message)}
-                            <div style={{ marginTop: '10px' }}>
+                            <div style={{ marginTop: '6px' }}>
                               <Typography
                                 variant="caption"
                                 style={{
@@ -205,6 +210,7 @@ function ChatRoom() {
                                   : 'pointer-receiver'
                               }`}
                             ></div>
+                          </div>
                           </div>
                         )
                       })
