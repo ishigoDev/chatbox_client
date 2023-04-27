@@ -8,9 +8,18 @@ import "./header.css";
 import { useLocation } from "react-router-dom";
 import { menuItem } from "./Menu";
 import HeaderLink from "../Link/HeaderLink";
+import signOut from "../../axios/signOut";
+import { removeToken } from "../../utils/localStorage";
 
 function Header() {
   const { pathname } = useLocation();
+  const signout = async ()=>{
+    const res = await signOut();    
+    if(res.status === 200){
+      removeToken();
+        window.location.href = "/login";
+    }
+  }
   return (
     <AppBar position="sticky" className="header" sx={{ boxShadow: "0" }}>
       <Container maxWidth="xl" className="header-container">
@@ -55,7 +64,7 @@ function Header() {
                   </HeaderLink>
                 ))
             ) : (
-              <HeaderLink underline="hover">Sign Out</HeaderLink>
+              <HeaderLink underline="hover" href={'#'}  onClick={signout}>Sign Out</HeaderLink>
             )}
           </Box>
         </Toolbar>

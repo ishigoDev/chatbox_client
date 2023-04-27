@@ -13,10 +13,12 @@ import { getUserId } from '../../utils/localStorage'
 import { format } from 'timeago.js'
 import InputEmoji from 'react-input-emoji'
 import { SocketContext } from '../../utils/socket'
-import { NotificationManager } from 'react-notifications'
 import { DoDecrypt, DoEncrypt } from '../../utils/encrpytion'
 import { getLastSeen } from 'last-seen-ago'
 import moment from 'moment'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { removeToken } from '../../utils/localStorage'
 function ChatRoom() {
   const [activeChat, setActiveChat] = useState('')
   const [activeChatRoom, setActiveChatRoom] = useState([])
@@ -33,6 +35,9 @@ function ChatRoom() {
   useEffect(() => {
     allUsers().then((resp) => {
       setUsers(resp.data.users)
+    })
+    .catch(err=>{
+      errorfun(err);
     })
     socket.current = socketInit
     socket.current.emit('new-user-add', getUserId())
@@ -66,6 +71,8 @@ function ChatRoom() {
       fetchChat(receiverId).then((resp) => {
         setActiveChatRoom(resp.data.message)
         setLoading(false)
+      }).catch(err =>{
+        errorfun(err);
       })
     }
   }, [activeChat])
@@ -84,6 +91,17 @@ function ChatRoom() {
       clearTimeout(delay)
     }
   }, [message])
+  const errorfun = (e) =>{
+    if(e.response.data.statusCode == 403){
+      toast(e.response.data.message)
+      setTimeout(()=>{
+        removeToken();
+        window.location = '/login'
+      },2200)        
+      }else{
+        toast(err.response.data.message)
+      }       
+  }
   const loadChat = (id) => {
     const activeUser = users.filter((user) => {
       return user.id == id
@@ -102,7 +120,7 @@ function ChatRoom() {
           if (response?.data?.status == 200) setMessage('')
         })
         .catch((err) => {
-          NotificationManager.error(err?.data, 'Something went wrong', 1500)
+          errorfun(err);   
         })
     }
   }
@@ -261,6 +279,18 @@ function ChatRoom() {
         md={2}
         className="chatroom"
       >
+        <ToastContainer
+        position="top-right"
+        autoClose={1500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable={false}
+        pauseOnHover
+        theme="light"
+        />
         <ActiveUser activeUsers={activeUsers} />
       </Grid>
     </Grid>
